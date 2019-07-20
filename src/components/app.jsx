@@ -1,4 +1,6 @@
 import React, { Component } from "react";
+import TaskList from "./tasklist";
+import AddTask from "./addTask";
 
 class Todo extends Component {
   state = {
@@ -59,53 +61,12 @@ class Todo extends Component {
     return (
       <table>
         <tbody>
-          <tr>
-            <th>NAME</th>
-            <th>Description</th>
-            <th>Status</th>
-            <th>Delete</th>
-          </tr>
-          {this.state.Tasks.map((task, index) => {
-            return (
-              <tr key={index}>
-                <td>{task.name}</td>
-                <td> {task.description}</td>
-                <td>
-                  <button value={index} onClick={this.handleTaskComplete}>
-                    {task.completed ? (
-                      <div> Completed </div>
-                    ) : (
-                      <div> Not Completed </div>
-                    )}
-                  </button>
-                </td>
-                <td>
-                  <button value={index} onClick={this.handleDelete}>
-                    Delete
-                  </button>
-                </td>
-              </tr>
-            );
-          })}
-          <tr>
-            <td>
-              <input
-                type="text"
-                ref={name => (this.name = name)}
-                placeholder="Enter Task Name"
-              />
-            </td>
-            <td>
-              <input
-                type="text"
-                ref={desc => (this.desc = desc)}
-                placeholder="Enter Task Description"
-              />
-            </td>
-            <td>
-              <button onClick={this.handleAddData}>Add</button>
-            </td>
-          </tr>
+          <TaskList
+            taskProps={this.state.Tasks}
+            onTaskComplete={this.handleTaskComplete}
+            onDelete={this.handleDelete}
+          />
+          <AddTask onAddData={this.handleAddData} />
         </tbody>
       </table>
     );
@@ -124,16 +85,14 @@ class Todo extends Component {
     this.setState({ Tasks });
   };
 
-  handleAddData = () => {
+  handleAddData = (name, desc) => {
     let Tasks = [...this.state.Tasks];
     let task = {
-      name: this.name.value,
-      description: this.desc.value,
+      name: name,
+      description: desc,
       completed: false
     };
     Tasks.push(task);
-    this.name.value = "";
-    this.desc.value = "";
     this.setState({ Tasks });
   };
 }
